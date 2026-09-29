@@ -1,6 +1,4 @@
-#include "raylib.h"
-#include <stdio.h>
-#include <string.h>
+#include "game.h"
 
 typedef enum { STATE_TITLE, STATE_LEVEL_SELECT, STATE_PLAYING } GameState;
 
