@@ -22,7 +22,9 @@
     <ClInclude Include="game.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c" />
+    <ClCompile Include="game.c" />
+    <ClCompile Include="lib.c" />
+    <ClCompile Include="map.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="aaac" />
