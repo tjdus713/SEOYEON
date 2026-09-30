@@ -3,53 +3,53 @@
 
 typedef enum
 {
-    MENU,       
-    GAME,       
-    HELP        
+    MENU,
+    GAME,
+    HELP
 } GameScreen;
 
 int main(void)
 {
-    
+
     const int screenWidth = 1000;
     const int screenHeight = 600;
 
-  
+
     InitWindow(screenWidth, screenHeight, "My Game");
 
-    
+
     Texture2D background = LoadTexture("assets/background.png");
 
     SetTargetFPS(60);
 
-  
+
     GameScreen currentScreen = MENU;
 
-    
+
     Rectangle playButton = { 400, 300, 200, 60 };
 
-    
+
     Rectangle helpButton = { 400, 390, 200, 60 };
 
 
-    
+
     while (!WindowShouldClose())
     {
-       
+
         Vector2 mouse = GetMousePosition();
 
 
-       
+
         if (currentScreen == MENU)
         {
-            
+
             if (CheckCollisionPointRec(mouse, playButton) &&
                 IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 currentScreen = GAME;
             }
 
-            
+
             if (CheckCollisionPointRec(mouse, helpButton) &&
                 IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
@@ -58,7 +58,7 @@ int main(void)
         }
 
 
-        
+
         if (currentScreen == GAME || currentScreen == HELP)
         {
             if (IsKeyPressed(KEY_ESCAPE))
@@ -73,10 +73,10 @@ int main(void)
         ClearBackground(RAYWHITE);
 
 
-       
+
         if (currentScreen == MENU)
         {
-          
+
             Rectangle source = {
                 0,
                 0,
@@ -91,7 +91,7 @@ int main(void)
                 (float)screenHeight
             };
 
-            
+
             DrawTexturePro(
                 background,
                 source,
@@ -104,7 +104,7 @@ int main(void)
             );
 
 
-           
+
 
             DrawText(
                 "MY GAME",
@@ -115,7 +115,7 @@ int main(void)
             );
 
 
-            
+
             if (CheckCollisionPointRec(mouse, playButton))
             {
                 DrawRectangleRec(playButton, LIGHTGRAY);
@@ -125,10 +125,10 @@ int main(void)
                 DrawRectangleRec(playButton, GRAY);
             }
 
-          
+
             DrawRectangleLinesEx(playButton, 3, BLACK);
 
-            
+
             DrawText(
                 "PLAY",
                 455,
@@ -138,7 +138,7 @@ int main(void)
             );
 
 
-            
+
             if (CheckCollisionPointRec(mouse, helpButton))
             {
                 DrawRectangleRec(helpButton, LIGHTGRAY);
@@ -148,10 +148,10 @@ int main(void)
                 DrawRectangleRec(helpButton, GRAY);
             }
 
-           
+
             DrawRectangleLinesEx(helpButton, 3, BLACK);
 
-            
+
             DrawText(
                 "HELP",
                 455,
@@ -162,10 +162,10 @@ int main(void)
         }
 
 
-        
+
         else if (currentScreen == GAME)
         {
-            
+
 
             DrawText(
                 "GAME SCREEN",
@@ -185,10 +185,10 @@ int main(void)
         }
 
 
-        
+
         else if (currentScreen == HELP)
         {
-           
+
 
             DrawText(
                 "HOW TO PLAY",
@@ -224,21 +224,20 @@ int main(void)
         }
 
 
-      
+
         EndDrawing();
     }
 
 
- 
 
-    
+
+
     UnloadTexture(background);
 
- 
+
     CloseWindow();
 
     return 0;
 }
-
 
 

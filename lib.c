@@ -112,6 +112,10 @@ void playerPhysics(PLAYER* player) {
 			player->vy = 0;
 			player->isGrounded = 1;
 		}
+		else if (stage[level][BOTTOM_Y][NOW_X] == 0) {
+			player->isGrounded = 0;
+			player->y += player->vy;
+		}
 		else player->y += player->vy;
 	}
 	else if (player->vy < 0) {
@@ -126,4 +130,5 @@ void playerPhysics(PLAYER* player) {
 		player->isGrounded = 0;
 	}
 	player->vy += GRAVITY;
+	
 }
