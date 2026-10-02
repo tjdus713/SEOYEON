@@ -82,13 +82,14 @@ void inputProcess() {
 
 
 void playerPhysics(PLAYER* player) {
-	int LEFT_X = (int)((player->x + player->vx - TILE_SIZE / 2) / TILE_SIZE);
-	int RIGHT_X = (int)((player->x + player->vx + TILE_SIZE / 2) / TILE_SIZE);
+	int LEFT_X = (int)((player->x + player->vx - TILE_SIZE / 2 ) / TILE_SIZE);
+	int RIGHT_X = (int)((player->x + player->vx + TILE_SIZE / 2 ) / TILE_SIZE);
 	int BOTTOM_Y = (int)((player->y + player->vy + TILE_SIZE / 2) / TILE_SIZE);
 	int TOP_Y = (int)((player->y + player->vy - TILE_SIZE / 2) / TILE_SIZE);
+	int L_TILE = (int)((player->x - TILE_SIZE / 2 + (TILE_SIZE * 0.2)) / TILE_SIZE);
+	int R_TILE = (int)((player->x + TILE_SIZE / 2 - (TILE_SIZE * 0.2)) / TILE_SIZE);
 	int NOW_X = (int)(player->x / TILE_SIZE);
 	int NOW_Y = (int)(player->y / TILE_SIZE);
-
 
 	if (player->vx > 0) {
 		if (stage[level][NOW_Y][RIGHT_X] == 1) {
@@ -107,20 +108,31 @@ void playerPhysics(PLAYER* player) {
 	else player->x += player->vx;
 
 	if (player->vy > 0) {
-		if (stage[level][BOTTOM_Y][NOW_X] == 1) {
+		if (stage[level][BOTTOM_Y][L_TILE] == 1) {
 			player->y = BOTTOM_Y * TILE_SIZE - TILE_SIZE / 2;
 			player->vy = 0;
 			player->isGrounded = 1;
+
 		}
-		else if (stage[level][BOTTOM_Y][NOW_X] == 0) {
-			player->isGrounded = 0;
+		else if (stage[level][BOTTOM_Y][R_TILE] == 1) {
+			player->y = BOTTOM_Y * TILE_SIZE - TILE_SIZE / 2;
+			player->vy = 0;
+			player->isGrounded = 1;
+
+		}
+		else {
 			player->y += player->vy;
+			player->isGrounded = 0;
 		}
-		else player->y += player->vy;
+
 	}
 	else if (player->vy < 0) {
-		if (stage[level][TOP_Y][NOW_X] == 1) {
-			player->y = (TOP_Y+1) * TILE_SIZE + TILE_SIZE / 2;
+		if (stage[level][TOP_Y][L_TILE] == 1) {
+			player->y = (TOP_Y + 1) * TILE_SIZE + TILE_SIZE / 2;
+			player->vy = 0;
+		}
+		else if (stage[level][TOP_Y][R_TILE] == 1) {
+			player->y = (TOP_Y + 1) * TILE_SIZE + TILE_SIZE / 2;
 			player->vy = 0;
 		}
 		else player->y += player->vy;
@@ -130,5 +142,5 @@ void playerPhysics(PLAYER* player) {
 		player->isGrounded = 0;
 	}
 	player->vy += GRAVITY;
-	
+
 }
