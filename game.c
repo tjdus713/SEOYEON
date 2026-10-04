@@ -17,7 +17,7 @@ int main(void)
         inputProcess();
         playerPhysics(&P1);
         playerPhysics(&P2);
-        display();
+        mapDisplay();
 
     }
 

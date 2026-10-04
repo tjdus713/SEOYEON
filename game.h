@@ -8,14 +8,14 @@
 
 
 //상수
-#define M_ROW 10
-#define M_COLUMN 10
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 320
-#define TILE_SIZE 32
-#define SPEED 5
-#define JUMP 10
-#define GRAVITY 0.5
+#define M_ROW 15
+#define M_COLUMN 20
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 960
+#define TILE_SIZE 64
+#define SPEED 10
+#define JUMP 25
+#define GRAVITY 1
 #define STAGE_NUM 1
 //구조체
 typedef struct _PLAYER {
@@ -46,7 +46,7 @@ extern int level;
 
 //함수
 void initGame();
-void display();
+void mapDisplay();
 void inputProcess();
 void playerPhysics(PLAYER* player);
 void initGame();
