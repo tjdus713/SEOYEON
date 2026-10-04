@@ -24,7 +24,7 @@ void initGame() {
 		}
 	}
 }
-void display() {
+void mapDisplay() {
 	int i, k;
 
 	BeginDrawing();
