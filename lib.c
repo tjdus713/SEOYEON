@@ -37,6 +37,21 @@ void mapDisplay() {
 				DrawRectangle(k * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, LIGHTGRAY);
 				DrawRectangleLines(k * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, BLACK);
 			}
+			if (stage[level][i][k] == 4) {
+				DrawRectangleGradientV(k * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE / 2, (Color) { 80, 190, 255, 200 }, (Color) { 15, 70, 160, 220 });
+				DrawRectangle(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, LIGHTGRAY);
+				DrawRectangleLines(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, BLACK);
+			}
+			if (stage[level][i][k] == 5) {
+				DrawRectangleGradientV(k * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE / 2, (Color) { 255, 200, 30, 255 }, (Color) { 180, 25, 10, 255 });
+				DrawRectangle(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, LIGHTGRAY);
+				DrawRectangleLines(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, BLACK);
+			}
+			if (stage[level][i][k] == 6) {
+				DrawRectangleGradientV(k * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE / 2, (Color) { 130, 240, 40, 220 }, (Color) { 20, 110, 25, 240 });
+				DrawRectangle(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, LIGHTGRAY);
+				DrawRectangleLines(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, BLACK);
+			}
 
 		}
 	}
@@ -82,8 +97,8 @@ void inputProcess() {
 
 
 void playerPhysics(PLAYER* player) {
-	int LEFT_X = (int)((player->x + player->vx - TILE_SIZE / 2 ) / TILE_SIZE);
-	int RIGHT_X = (int)((player->x + player->vx + TILE_SIZE / 2 ) / TILE_SIZE);
+	int LEFT_X = (int)((player->x + player->vx - TILE_SIZE / 2) / TILE_SIZE);
+	int RIGHT_X = (int)((player->x + player->vx + TILE_SIZE / 2) / TILE_SIZE);
 	int BOTTOM_Y = (int)((player->y + player->vy + TILE_SIZE / 2) / TILE_SIZE);
 	int TOP_Y = (int)((player->y + player->vy - TILE_SIZE / 2) / TILE_SIZE);
 	int L_TILE = (int)((player->x - TILE_SIZE / 2 + (TILE_SIZE * 0.2)) / TILE_SIZE);
@@ -92,14 +107,24 @@ void playerPhysics(PLAYER* player) {
 	int NOW_Y = (int)(player->y / TILE_SIZE);
 
 	if (player->vx > 0) {
-		if (stage[level][NOW_Y][RIGHT_X] == 1) {
+		if (stage[level][NOW_Y][RIGHT_X] == 1 && (stage[level][NOW_Y][NOW_X] == 4 || stage[level][NOW_Y][NOW_X] == 5 || stage[level][NOW_Y][NOW_X] == 6)) {
+			player->y = BOTTOM_Y * TILE_SIZE - TILE_SIZE / 2;
+			player->x += player->vx;
+		}
+		else if (stage[level][NOW_Y][RIGHT_X] == 1) {
 			player->x = RIGHT_X * TILE_SIZE - TILE_SIZE / 2;
 			player->vx = 0;
 		}
 		else player->x += player->vx;
+
+
 	}
 	else if (player->vx < 0) {
-		if (stage[level][NOW_Y][LEFT_X] == 1) {
+		if (stage[level][NOW_Y][LEFT_X] == 1 && (stage[level][NOW_Y][NOW_X] == 4 || stage[level][NOW_Y][NOW_X] == 5 || stage[level][NOW_Y][NOW_X] == 6)) {
+			player->y = BOTTOM_Y * TILE_SIZE - TILE_SIZE / 2;
+			player->x += player->vx;
+		}
+		else if (stage[level][NOW_Y][LEFT_X] == 1) {
 			player->x = (LEFT_X + 1) * TILE_SIZE + TILE_SIZE / 2;
 			player->vx = 0;
 		}
@@ -118,7 +143,17 @@ void playerPhysics(PLAYER* player) {
 			player->y = BOTTOM_Y * TILE_SIZE - TILE_SIZE / 2;
 			player->vy = 0;
 			player->isGrounded = 1;
+		}
+		else if (stage[level][BOTTOM_Y][L_TILE] == 4 || stage[level][BOTTOM_Y][L_TILE] == 5 || stage[level][BOTTOM_Y][L_TILE] == 6) {
+			player->y = BOTTOM_Y * TILE_SIZE;
+			player->vy = 0;
+			player->isGrounded = 1;
 
+		}
+		else if (stage[level][BOTTOM_Y][R_TILE] == 4 || stage[level][BOTTOM_Y][R_TILE] == 5 || stage[level][BOTTOM_Y][R_TILE] == 6) {
+			player->y = BOTTOM_Y * TILE_SIZE;
+			player->vy = 0;
+			player->isGrounded = 1;
 		}
 		else {
 			player->y += player->vy;
