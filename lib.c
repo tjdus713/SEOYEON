@@ -7,6 +7,11 @@ int level = 0;
 
 
 void initGame() {
+	rock.isBeing = 0;
+	P1.getR_key = 0;
+	P1.getB_key = 0;
+	P2.getR_key = 0;
+	P2.getB_key = 0;
 	P1.isGrounded = 1;
 	P2.isGrounded = 1;
 	level = 0;
@@ -33,6 +38,9 @@ void mapDisplay() {
 
 	for (i = 0; i < M_ROW; i++) {
 		for (k = 0; k < M_COLUMN; k++) {
+			if (rock.isBeing == 1) {
+				DrawCircle(rock.x, rock.y, ROCK_R, GRAY);
+			}
 			if (stage[level][i][k] == 1) {
 				DrawRectangle(k * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, LIGHTGRAY);
 				DrawRectangleLines(k * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, BLACK);
@@ -52,11 +60,15 @@ void mapDisplay() {
 				DrawRectangle(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, LIGHTGRAY);
 				DrawRectangleLines(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, BLACK);
 			}
+			if (stage[level][i][k] == 7) {
+				DrawRectangle(k * TILE_SIZE + 8, i * TILE_SIZE + TILE_SIZE - 12, TILE_SIZE - 16, 12, PURPLE);//x,y는 왼쪽 위 모서리
+			}
 
 		}
 	}
 	DrawCircle(P1.x, P1.y, TILE_SIZE / 2, RED);
 	DrawCircle(P2.x, P2.y, TILE_SIZE / 2, BLUE);
+	DrawText(TextFormat("rock: %d  x: %.1f", rock.isBeing, rock.x), 10, 50, 14, BLACK);
 	DrawText(TextFormat("P1.x: %.1f  P1.y: %.1f", P1.x, P1.y), 10, 10, 14, BLACK);
 	DrawText(TextFormat("P2.x: %.1f  P2.y: %.1f", P2.x, P2.y), 10, 30, 14, BLACK);
 	EndDrawing();
