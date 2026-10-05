@@ -17,7 +17,17 @@
 #define JUMP 25
 #define GRAVITY 1
 #define STAGE_NUM 1
+#define TILE_WATER  4
+#define TILE_FIRE   5
+#define TILE_POISON 6
+#define TILE_BUTTON 7
+#define ROCK_R 32
+#define ROCK_SPEED 8
 //구조체
+typedef struct {
+	int x, y, w, h;
+} HitBox;
+
 typedef struct _PLAYER {
 	float x, y;
 	float vx, vy;
@@ -25,6 +35,9 @@ typedef struct _PLAYER {
 	int isGrounded;
 	int isAlive;
 	int atDoor;
+	int getR_key;
+	int getB_key;
+	HitBox hitbox;
 } PLAYER;
 
 typedef struct _ELEVATOR {
@@ -33,7 +46,11 @@ typedef struct _ELEVATOR {
 	float targetY;
 } ELEVATOR;
 
-
+typedef struct _ROCK {
+	float x, y;
+	float angle;
+	int isBeing;
+}ROCK;
 
 //전역 변수
 extern PLAYER P1;
@@ -42,6 +59,7 @@ extern int gameState; //0이면 게임오버, 1이면 게임 클리어
 extern ELEVATOR elevator;
 extern char stage[STAGE_NUM][M_ROW][M_COLUMN];
 extern int level;
+extern ROCK rock;
 
 
 //함수
@@ -50,3 +68,4 @@ void mapDisplay();
 void inputProcess();
 void playerPhysics(PLAYER* player);
 void initGame();
+void objectProcess();
