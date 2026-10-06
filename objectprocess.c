@@ -5,6 +5,7 @@
 
 int gameState;
 ROCK rock;
+ELEVATOR elevator;
 
 static void syncHitBox(PLAYER* p) {
     p->hitbox.x = (int)p->x - TILE_SIZE / 2;
@@ -37,8 +38,11 @@ int hitWater(HitBox hb) {
     return hitTile(hb, TILE_WATER); }
 int hitPoison(HitBox hb) { 
     return hitTile(hb, TILE_POISON); }
-int hitButton(HitBox hb) {
-    return hitTile(hb, TILE_BUTTON);}
+int hitRockButton(HitBox hb) {
+    return hitTile(hb, ROCK_BUTTON);}
+int hitElevatorBUtton(HitBox hb) {
+    return hitTile(hb, ELEVATOR_BUTTON);
+}
 
 /*
 int hitR_key(HitBox hb) { return hitTile(hb, TILE_R_KEY); }
@@ -50,7 +54,7 @@ extern int hitWater(HitBox hb);
 extern int hitPoison(HitBox hb);
 extern int hitR_key(HitBox hb);
 extern int hitB_key(HitBox hb);
-extern int hitButton(HitBox hb);
+extern int hitRockButton(HitBox hb);
 
 extern void removeR_key(void);
 extern void removeB_key(void);
@@ -63,12 +67,17 @@ void objectProcess(void) {
     syncHitBox(&P1);
     syncHitBox(&P2);
 
-    if ((hitButton(P1.hitbox) || hitButton(P2.hitbox)) && rock.isBeing == 0) {
+    if ((hitRockButton(P1.hitbox) || hitRockButton(P2.hitbox)) && rock.isBeing == 0) {
         rock.isBeing = 1;
         rock.x = SCREEN_WIDTH + ROCK_R;//수정
         rock.y = 14 * TILE_SIZE - ROCK_R;
     }
-
+    if (hitElevatorBUtton(P1.hitbox) || hitElevatorBUtton(P2.hitbox)) {
+        elevator.isPressed = 1;
+    }
+    else {
+        elevator.isPressed = 0;
+    }
 
     //P1 or P2 물,불,독
     if (hitWater(P1.hitbox) || hitFire(P2.hitbox) || hitPoison(P1.hitbox) || hitPoison(P2.hitbox))
@@ -78,6 +87,7 @@ void objectProcess(void) {
         return;
     }
 
+    //돌
     if (rock.isBeing==1) {
         rock.x -= ROCK_SPEED;
         if (rock.x <= TILE_SIZE + ROCK_R) {
@@ -90,10 +100,55 @@ void objectProcess(void) {
             gameState = 0;
             initGame();
             return;
-        }
-            
+        }    
     }
-return;
+
+    //엘베
+
+    int P1_on = 0;
+    int P2_on = 0;
+    float P1_foot = P1.y + TILE_SIZE / 2;  
+    float P1_left = P1.x - TILE_SIZE / 2 + TILE_SIZE * 0.2f;
+    float P1_right = P1.x + TILE_SIZE / 2 - TILE_SIZE * 0.2f;
+    float P2_foot = P2.y + TILE_SIZE / 2;  
+    float P2_left = P2.x - TILE_SIZE / 2 + TILE_SIZE * 0.2f;
+    float P2_right = P2.x + TILE_SIZE / 2 - TILE_SIZE * 0.2f;
+
+    //플레이어들이 판 위에 있나
+    if ((P1_right >= elevator.x) && (P1_left <= elevator.x + elevator.w)
+        && (P1_foot >= elevator.y -1 ) && (P1_foot <= elevator.y + 1)) {
+        P1_on = 1;
+    }
+    if ((P2_right >= elevator.x) && (P2_left <= elevator.x + elevator.w)
+        && (P2_foot >= elevator.y - 1) && (P2_foot <= elevator.y + 1)) {
+        P2_on = 1;
+    }
+
+
+    //엘베 움직이기
+
+    float beforeY = elevator.y;
+
+    if (elevator.isPressed == 1 && elevator.y < elevator.targetY) {
+        elevator.y += ELEVATOR_SPEED;
+        if (elevator.y > elevator.targetY) {
+            elevator.y = elevator.targetY;
+        }
+    }
+    else if (elevator.isPressed == 0 && elevator.y > elevator.originY) {
+        elevator.y -= ELEVATOR_SPEED;
+        if (elevator.y < elevator.originY) {
+            elevator.y = elevator.originY;
+        }
+    }
+
+    float elevatorMove = elevator.y - beforeY;
+    if (P1_on == 1) {
+        P1.y += elevatorMove;
+    }
+    if (P2_on == 1) {
+        P2.y += elevatorMove;
+    }
 }
     /*
     * 
@@ -110,15 +165,5 @@ return;
         P2.getB_key = 1;
         removeB_key();
     }
-
-    //버튼에 닿
-    if (hitButton(P1.hitbox) || hitButton(P2.hitbox))
-        moveElevator(&elevator, elevator.targetY);
-    else if (elevator.y != elevator.originY)
-        moveElevator(&elevator, elevator.originY);
-
-
-    return;
-}
 
 */
