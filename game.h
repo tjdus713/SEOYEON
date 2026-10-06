@@ -14,15 +14,19 @@
 #define SCREEN_HEIGHT 960
 #define TILE_SIZE 64
 #define SPEED 10
-#define JUMP 25
+#define JUMP 20
 #define GRAVITY 1
 #define STAGE_NUM 1
 #define TILE_WATER  4
 #define TILE_FIRE   5
 #define TILE_POISON 6
-#define TILE_BUTTON 7
+#define ROCK_BUTTON 7
 #define ROCK_R 32
 #define ROCK_SPEED 8
+#define ELEVATOR_BUTTON 9
+#define ELEVATOR_SPEED 4
+#define ELEVATOR_H 16 //두께
+
 //구조체
 typedef struct {
 	int x, y, w, h;
@@ -41,9 +45,12 @@ typedef struct _PLAYER {
 } PLAYER;
 
 typedef struct _ELEVATOR {
-	float x, y;
+	float x,y;//왼쪽위모서리
 	float originY;
 	float targetY;
+	float w, h;//크기
+	int isPressed;
+
 } ELEVATOR;
 
 typedef struct _ROCK {
