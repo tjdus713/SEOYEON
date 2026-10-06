@@ -8,6 +8,7 @@ int level = 0;
 
 void initGame() {
 	rock.isBeing = 0;
+	elevator.isPressed = 0;
 	P1.getR_key = 0;
 	P1.getB_key = 0;
 	P2.getR_key = 0;
@@ -27,6 +28,13 @@ void initGame() {
 				P2.y = i * TILE_SIZE;
 			}
 		}
+		elevator.x = 13 * TILE_SIZE;
+		elevator.w = 2 * TILE_SIZE;
+		elevator.h = ELEVATOR_H;
+		elevator.originY = 6 * TILE_SIZE;
+		elevator.targetY = 10 * TILE_SIZE - ELEVATOR_H;
+		elevator.y = elevator.originY;
+
 	}
 }
 void mapDisplay() {
@@ -60,12 +68,15 @@ void mapDisplay() {
 				DrawRectangle(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, LIGHTGRAY);
 				DrawRectangleLines(k * TILE_SIZE, i * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE - TILE_SIZE / 2, BLACK);
 			}
-			if (stage[level][i][k] == 7) {
+			if (stage[level][i][k] == ROCK_BUTTON) {
 				DrawRectangle(k * TILE_SIZE + 8, i * TILE_SIZE + TILE_SIZE - 12, TILE_SIZE - 16, 12, PURPLE);//x,y는 왼쪽 위 모서리
 			}
-
+			if (stage[level][i][k] == ELEVATOR_BUTTON) {
+				DrawRectangle(k * TILE_SIZE + 8, i * TILE_SIZE + TILE_SIZE - 12, TILE_SIZE - 16, 12, BROWN);
+			}
 		}
 	}
+	DrawRectangle(elevator.x, elevator.y, elevator.w, elevator.h, BROWN);
 	DrawCircle(P1.x, P1.y, TILE_SIZE / 2, RED);
 	DrawCircle(P2.x, P2.y, TILE_SIZE / 2, BLUE);
 	DrawText(TextFormat("rock: %d  x: %.1f", rock.isBeing, rock.x), 10, 50, 14, BLACK);
@@ -108,6 +119,27 @@ void inputProcess() {
 }
 
 
+// 0이면 플레이어 착지, 1이면 없음
+int landOnElevator(PLAYER* player) {
+	float foot = player->y + TILE_SIZE / 2;  //'->'는 포인터가 가리키는 구조체 안의 멤버꺼내는거
+	float left = player->x - TILE_SIZE / 2 + TILE_SIZE * 0.2f;// 20% 줄여서(플레이어 원이라)
+	float right = player->x + TILE_SIZE / 2 - TILE_SIZE * 0.2f;
+
+	if ((right < elevator.x) || (left > elevator.x + elevator.w)) {
+		return 0;
+	}
+	//지금 판보다 위에 있나? 이번에 내려가면 판에 닿나?
+	if ((foot <= elevator.y + 1) && (foot + player->vy >= elevator.y)) {//'+1'없으면 딱붙어서 오류 생길 수 있음
+		player->y = elevator.y - TILE_SIZE / 2;                //조건  이번에 vy만큼 내려가면 elevator.y 값보다 큰가? 
+		player->vy = 0;
+		player->isGrounded = 1;
+		return 1;
+	}
+	return 0;
+}
+
+
+
 void playerPhysics(PLAYER* player) {
 	int LEFT_X = (int)((player->x + player->vx - TILE_SIZE / 2) / TILE_SIZE);
 	int RIGHT_X = (int)((player->x + player->vx + TILE_SIZE / 2) / TILE_SIZE);
@@ -145,7 +177,10 @@ void playerPhysics(PLAYER* player) {
 	else player->x += player->vx;
 
 	if (player->vy > 0) {
-		if (stage[level][BOTTOM_Y][L_TILE] == 1) {
+		if (landOnElevator(player)) {
+			// 판 위에 착지 
+		}
+		else if (stage[level][BOTTOM_Y][L_TILE] == 1) {
 			player->y = BOTTOM_Y * TILE_SIZE - TILE_SIZE / 2;
 			player->vy = 0;
 			player->isGrounded = 1;
@@ -191,3 +226,6 @@ void playerPhysics(PLAYER* player) {
 	player->vy += GRAVITY;
 
 }
+
+
+
